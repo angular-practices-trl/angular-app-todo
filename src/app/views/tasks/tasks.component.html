@@ -1,0 +1,109 @@
+<div class="card">
+  <div class="card-header card-header-warning">
+    <h4 class="card-title">Tasks List</h4>
+  </div>
+  <div class="card-body table-responsive"
+       *ngIf="(tasks != null) && tasks.length > 0"
+  >
+
+    <table [dataSource]="_dataSource"
+           mat-table
+           matSort
+    >
+
+      <ng-container matColumnDef="color">
+        <th *matHeaderCellDef
+            mat-header-cell
+        ></th>
+        <td *matCellDef="let task"
+            [style.background-color]="getPriorityColor(task)"
+            class="col-color"
+            mat-cell
+        ></td>
+      </ng-container>
+
+      <ng-container matColumnDef="id">
+        <th *matHeaderCellDef
+            mat-header-cell
+        ></th>
+        <td *matCellDef="let index = index;"
+            class="col-id" mat-cell
+        >
+          {{index + 1}}
+        </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="title">
+        <th *matHeaderCellDef
+            mat-header-cell
+            mat-sort-header
+        > Title
+        </th>
+        <td *matCellDef="let task"
+            [class.completed]="task.completed"
+            class="col-title pointer"
+            mat-cell
+            (click)="onClickTask(task)"
+        >
+          {{task.title}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th *matHeaderCellDef
+            mat-header-cell
+            mat-sort-header
+        > Date
+        </th>
+        <td *matCellDef="let task"
+            [ngClass]="{'completed': task.completed, 'novalue': task.date == null}"
+            class="col-date"
+            mat-cell
+        >
+          {{task.date ? (task.date | date: "medium") : "Без даты"}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="priority">
+        <th *matHeaderCellDef
+            mat-header-cell
+            mat-sort-header
+        > Priority
+        </th>
+        <td *matCellDef="let task"
+            class="col-priority"
+            [ngClass]="{'completed': task.completed, 'novalue': task.priority == null}"
+            mat-cell
+        >
+          {{task.priority ? task.priority.title : "Not Priority"}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="category">
+        <th *matHeaderCellDef
+            mat-header-cell
+            mat-sort-header
+        > Category
+        </th>
+        <td *matCellDef="let task"
+            class="col-category"
+            [ngClass]="{'completed': task.completed, 'novalue': task.category == null}"
+            mat-cell
+        >
+          {{task.category ? task.category.title : "Not Category"}}
+        </td>
+      </ng-container>
+
+      <tr *matHeaderRowDef="_displayedColumns; " mat-header-row></tr>
+      <tr *matRowDef="let row; columns: _displayedColumns;" mat-row></tr>
+
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+
+  </div>
+
+  <div *ngIf="(tasks != null) && tasks.length == 0"><p class="not-found">Not Found Tasks !!!</p></div>
+
+</div>
